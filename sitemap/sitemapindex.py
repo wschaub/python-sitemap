@@ -1,4 +1,4 @@
-
+import sys
 from lxml import etree
 from urllib import urlopen
 from cStringIO import StringIO
@@ -6,6 +6,22 @@ from gzip import GzipFile
 
 from urlset import *
 from exceptions import *
+
+def generate_sitemapindex(sitemaps,out=sys.stdout):
+    sitemapindex = etree.Element("sitemapindex",xmlns="http://www.sitemaps.org/schemas/sitemap/0.9")
+    for map in sitemaps:
+        sitemap = etree.Element("sitemap")
+        loc = etree.Element("loc")
+        lastmod = etree.Element("lastmod")
+        loc.text = map['loc']
+        sitemap.append(loc)
+        if map.has_key('lastmod'):
+            lastmod.text = map['lastmod'].isoformat()
+            sitemap.append(lastmod)
+        sitemapindex.append(sitemap)
+    out.write(etree.tostring(sitemapindex,xml_declaration=True,pretty_print=True,encoding="UTF-8"))
+
+
 
 class SitemapIndex(object):
 
