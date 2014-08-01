@@ -43,7 +43,7 @@ class FixedOffset(tzinfo):
     """Fixed offset in hours and minutes from UTC
     
     """
-    def __init__(self, offset_hours, offset_minutes, name):
+    def set(self, offset_hours, offset_minutes, name):
         self.__offset = timedelta(hours=offset_hours, minutes=offset_minutes)
         self.__name = name
 
@@ -76,7 +76,9 @@ def parse_timezone(tzstring, default_timezone=UTC):
     if prefix == "-":
         hours = -hours
         minutes = -minutes
-    return FixedOffset(hours, minutes, tzstring)
+    offset = FixedOffset()
+    offset.set(hours, minutes, tzstring)
+    return offset
 
 def parse_date(datestring, default_timezone=UTC):
     """Parses ISO 8601 dates into datetime objects
